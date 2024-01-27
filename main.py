@@ -13,6 +13,8 @@ import webbrowser
 
 from stats import PotaStats
 
+VERSION = '0.0.1'
+
 locations = []
 locations2 = {}
 loc_coords = {}
@@ -240,8 +242,9 @@ class PotaMapRoot(tkinter.Tk):
             self.combo_callback(event)
 
 
-
 if __name__ == "__main__":
+    print(f"potamap version {VERSION}")
+
     get_config()
     get_locations()
     get_parks()
