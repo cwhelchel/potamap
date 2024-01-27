@@ -1,0 +1,16 @@
+{
+    "python.pythonPath": "virtenv/Scripts/python",
+    "cSpell.words": [
+        "aclog",
+        "ACLOG",
+        "ADDADIFRECORD",
+        "fastapi",
+        "FREQA",
+        "FREQB",
+        "omnirig",
+        "RITOFF",
+        "RITOFFSET",
+        "RITON",
+        "uvicorn"
+    ]
+}
