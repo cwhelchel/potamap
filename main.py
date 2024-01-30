@@ -15,7 +15,7 @@ from idlelib.tooltip import Hovertip
 
 from stats import PotaStats
 
-VERSION = '0.0.1'
+VERSION = '0.0.2'
 
 locations = []
 locations2 = {}
