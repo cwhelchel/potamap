@@ -1,5 +1,10 @@
 {
     "location": "US-GA",
     "init_x": 33.0406,
-    "init_y": -83.6431
+    "init_y": -83.6431,
+    "display_opts": 1,
+    "show_actx_lbl": false,
+    "show_hunt_lbl": false,
+    "show_unkn_lbl": true,
+    "text_color": "#0073ff"
 }
