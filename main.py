@@ -18,7 +18,7 @@ VERSION = '0.0.1'
 locations = []
 locations2 = {}
 loc_coords = {}
-default_cfg = {'location': 'US-GA', 'init_x': 33.0406, 'init_y': -83.6431}
+default_cfg = {'location': 'US-GA', 'init_x': 33.0406, 'init_y': -83.6431, 'display_opts': 0}
 config = {}
 
 #
@@ -150,6 +150,21 @@ class PotaMapRoot(tkinter.Tk):
         self.combo.bind("<<ComboboxSelected>>", self.combo_callback)
         self.combo.bind("<Return>", self.combo_enter)
 
+
+        self.combo_frame2 = ttk.Frame(self.left_frame, padding=10)
+        self.combo_frame2.pack(side='top', fill='x')
+        self.lbl_displayopts = ttk.Label(self.combo_frame2, text="Display Options:")
+        self.lbl_displayopts.pack(side='left')
+    
+        self.combo_displayopts_vals = ['Full Park Name', 'Park# Only']
+        #global config
+        print(config['display_opts'])
+        self.combo_displayopts = ttk.Combobox(self.combo_frame2, values=self.combo_displayopts_vals)
+        self.combo_displayopts.current(config['display_opts'])
+        self.combo_displayopts.pack(side='top', anchor='w')
+        self.combo_displayopts.bind("<<ComboboxSelected>>", self.combo_displayopts_callback)
+        self.combo_displayopts.bind("<Return>", self.combo_displayopts_enter)
+
         self.loc_info_frame = ttk.Frame(self.left_frame, padding=10)
         self.loc_info_frame.pack(side='top', fill='x')
         self.loc_label = ttk.Label(self.loc_info_frame, text="Loc Info")
@@ -159,6 +174,8 @@ class PotaMapRoot(tkinter.Tk):
             self.loc_info_frame, text="Open Stats Page", command=self.open_browser)
         self.browse_btn.pack(side='bottom')
 
+        
+        
         self.right_frame = ttk.Frame(self, padding=10)
         self.right_frame.pack(side='right')
         self.map = tkintermapview.TkinterMapView(
@@ -188,12 +205,20 @@ class PotaMapRoot(tkinter.Tk):
         actxed = self.stats.has_activated(ref)
         hunted = self.stats.has_hunted(ref)
 
+        def get_displayopt_text():
+                if config['display_opts'] == 1: # Option 1: Park# Only
+                    text = f"{ref}"
+                else: # Default/Option 0 - Full Park Name
+                    text = f"{ref} {park['name']}"
+
+                return text
+
         if actxed and hunted:
             i = PIL.ImageTk.PhotoImage(file="cd.png")
-            name = ref + ' ' + park['name']
+            name = get_displayopt_text()
         elif actxed:
             i = PIL.ImageTk.PhotoImage(file="bd.png")
-            name = ref + ' ' + park['name']
+            name = get_displayopt_text()
         elif hunted:
             i = PIL.ImageTk.PhotoImage(file="gd.png")
             name = ""
@@ -241,7 +266,26 @@ class PotaMapRoot(tkinter.Tk):
         if loc in locations:
             self.combo_callback(event)
 
+    def combo_displayopts_callback(self, event):
+        ''' 
+        Occurs on the Display Options combobox selection change.
+        Update the marker labels using the current state of location config (already selected by user in the location combobox)
+        '''
+        loc = self.combo_displayopts.get()
+        self.map.delete_all_marker()
+        config['display_opts'] = self.combo_displayopts.current()
+        self.map.set_position(config['init_x'], config['init_y'])
+        get_parks()
+        read_parks(self)
 
+    def combo_displayopts_enter(self, event):
+        ''' 
+        Occurs when user presses enter in the location combobox
+        '''
+        loc = self.combo_displayopts.get()
+        print(loc)
+        self.combo_displayopts_callback(event)
+        
 if __name__ == "__main__":
     print(f"potamap version {VERSION}")
 
