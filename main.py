@@ -68,7 +68,8 @@ def get_locations():
                     id = location['descriptor']
                     locations.append(id)
                     locations2[id] = [program, entity, location]
-                    loc_coords[id] = (location['latitude'], location['longitude'])
+                    loc_coords[id] = (location['latitude'],
+                                      location['longitude'])
 
     # put them suckas in some sort of order for the dropdown
     locations.sort()
@@ -106,15 +107,16 @@ def read_parks(window):
         for d in home_data:
             window.create_park_marker(d)
 
-def check_color_input(val : str) -> str:
+
+def check_color_input(val: str) -> str:
     '''
     Checks if the input is a valid hex color. If invalid returns a default
     '''
     match = re.search(r'^#(?:[0-9a-fA-F]{3}){1,2}$', val)
-    if match: 
+    if match:
         return val
     else:
-        return "#6d6af7" # original default val
+        return "#6d6af7"  # original default val
 
 
 class PotaMapRoot(tkinter.Tk):
@@ -133,7 +135,7 @@ class PotaMapRoot(tkinter.Tk):
         self.color_var = StringVar()
         self.show_hunt_var = IntVar()
         self.show_actx_var = IntVar()
-        self.show_unkn_var = IntVar() # these are for the yellow dots
+        self.show_unkn_var = IntVar()  # these are for the yellow dots
 
         self.create_widgets()
 
@@ -171,32 +173,39 @@ class PotaMapRoot(tkinter.Tk):
         self.combo.bind("<<ComboboxSelected>>", self.combo_callback)
         self.combo.bind("<Return>", self.combo_enter)
 
-
         self.combo_frame2 = ttk.Frame(self.left_frame, padding=10)
         self.combo_frame2.pack(side='top', fill='x')
-        self.lbl_displayopts = ttk.Label(self.combo_frame2, text="Display Options:")
+        self.lbl_displayopts = ttk.Label(
+            self.combo_frame2, text="Display Options:")
         self.lbl_displayopts.pack(side='left')
-    
+
         self.combo_displayopts_vals = ['Full Park Name', 'Park# Only']
-        self.combo_displayopts = ttk.Combobox(self.combo_frame2, values=self.combo_displayopts_vals)
+        self.combo_displayopts = ttk.Combobox(
+            self.combo_frame2, values=self.combo_displayopts_vals)
         self.combo_displayopts.current(config['display_opts'])
         self.combo_displayopts.pack(side='top', anchor='w')
-        self.combo_displayopts.bind("<<ComboboxSelected>>", self.combo_displayopts_callback)
+        self.combo_displayopts.bind(
+            "<<ComboboxSelected>>", self.combo_displayopts_callback)
         self.combo_displayopts.bind("<Return>", self.combo_displayopts_enter)
 
         self.lbl_opts_frame = ttk.Frame(self.left_frame, padding=10)
         self.lbl_opts_frame.pack(side='top', fill='x')
-        self.chk_show_hunt = ttk.Checkbutton(self.lbl_opts_frame, text="Hunt Labels", variable=self.show_hunt_var, command=self.handle_check)
+        self.chk_show_hunt = ttk.Checkbutton(
+            self.lbl_opts_frame, text="Hunt Labels", variable=self.show_hunt_var, command=self.handle_check)
         self.chk_show_hunt.pack(side='top', anchor='w')
-        self.chk_show_actx = ttk.Checkbutton(self.lbl_opts_frame, text="Activation Labels", variable=self.show_actx_var, command=self.handle_check)
+        self.chk_show_actx = ttk.Checkbutton(
+            self.lbl_opts_frame, text="Activation Labels", variable=self.show_actx_var, command=self.handle_check)
         self.chk_show_actx.pack(side='top', anchor='w')
-        self.chk_show_unkn = ttk.Checkbutton(self.lbl_opts_frame, text="Unknown Labels", variable=self.show_unkn_var, command=self.handle_check)
+        self.chk_show_unkn = ttk.Checkbutton(
+            self.lbl_opts_frame, text="Unknown Labels", variable=self.show_unkn_var, command=self.handle_check)
         self.chk_show_unkn.pack(side='top', anchor='w')
-        self.tt = Hovertip(self.chk_show_unkn, 'For the un-hunted un-activated parks')
-        
+        self.tt = Hovertip(self.chk_show_unkn,
+                           'For the un-hunted un-activated parks')
+
         self.lbl_color = ttk.Label(self.lbl_opts_frame, text="Color:")
         self.lbl_color.pack(side='left')
-        self.color_textbox = ttk.Entry(self.lbl_opts_frame, text="Color:", textvariable=self.color_var)
+        self.color_textbox = ttk.Entry(
+            self.lbl_opts_frame, text="Color:", textvariable=self.color_var)
         self.color_textbox.bind("<Return>", self.accept_color_input)
         self.color_textbox.bind("<FocusOut>", self.accept_color_input)
         self.color_textbox.pack(side='top')
@@ -234,15 +243,16 @@ class PotaMapRoot(tkinter.Tk):
             self.park_lbl.configure(text=text)
 
         def get_displayopt_text(display_key: str):
-            if not config[display_key]: return ""
+            if not config[display_key]:
+                return ""
 
-            if config['display_opts'] == 1: # Option 1: Park# Only
+            if config['display_opts'] == 1:  # Option 1: Park# Only
                 text = f"{ref}"
-            else: # Default/Option 0 - Full Park Name
+            else:  # Default/Option 0 - Full Park Name
                 text = f"{ref} {park['name']}"
 
             return text
-        
+
         ref = park['reference']
         data = park
 
