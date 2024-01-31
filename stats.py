@@ -25,7 +25,7 @@ class PotaStats:
         if not os.path.exists(file_n):
             return
 
-        with open(file_n) as csv_file:
+        with open(file_n, encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             skip_headers = True
             for row in csv_reader:
@@ -46,7 +46,7 @@ class PotaStats:
         if not os.path.exists(file_n):
             return
 
-        with open(file_n) as csv_file:
+        with open(file_n, encoding='utf-8') as csv_file:
             csv_reader = csv.DictReader(csv_file, delimiter=',')
             skip_headers = True
             for row in csv_reader:

@@ -2,3 +2,10 @@ __pycache__/
 build/
 dist/
 virtenv/
+.venv/
+
+# ignore some data files
+hunter_parks.csv
+activator_parks.csv
+locations.json
+parks*.json
