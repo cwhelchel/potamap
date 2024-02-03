@@ -1,19 +1,43 @@
 import csv
 import os
+from dataclasses import dataclass
+
+
+@dataclass
+class LocationStat:
+    hunts: int
+    activations: int
+
 
 class PotaStats:
+    '''
+    This class exposes some POTA statistics calculated from the user's hunter 
+    and activator csv files. 
+    '''
 
     def __init__(self) -> None:
         self.activated_parks = []
         self.hunted_parks = []
+        self.loc_stats: dict[str, LocationStat] = {}
+        self.loc_stats['US-GA'] = LocationStat(0, 0)
         self._get_activations_csv()
         self._get_hunts_csv()
 
     def has_hunted(self, ref: str) -> bool:
+        '''Returns true if the user has hunted the given POTA reference'''
         return ref in self.hunted_parks
 
     def has_activated(self, ref: str) -> bool:
+        '''Returns true if the user has activated the given POTA reference'''
         return ref in self.activated_parks
+
+    def get_hunt_count(self, location: str) -> int:
+        '''Returns number of hunted references in a given location'''
+        return self.loc_stats[location].hunts if location in self.loc_stats else 0
+
+    def get_actx_count(self, location: str) -> int:
+        '''Returns number of activated references in a given location'''
+        return self.loc_stats[location].activations if location in self.loc_stats else 0
 
     def _get_activations_csv(self):
         '''
@@ -33,7 +57,8 @@ class PotaStats:
                     skip_headers = False
                     continue
                 else:
-                    # print(f'\t{row["DX Entity"]} {row["HASC"]} {row["Reference"]}.')
+                    location = row["HASC"]
+                    self._inc_activations(location)
                     self.activated_parks.append(row['Reference'])
 
     def _get_hunts_csv(self):
@@ -54,8 +79,21 @@ class PotaStats:
                     skip_headers = False
                     continue
                 else:
-                    # print(f'\t{row["DX Entity"]} {row["HASC"]} {row["Reference"]}.')
+                    location = row["HASC"]
+                    self._inc_hunts(location)
                     self.hunted_parks.append(row['Reference'])
+
+    def _inc_hunts(self, location: str):
+        if location in self.loc_stats:
+            self.loc_stats[location].hunts += 1
+        else:
+            self.loc_stats[location] = LocationStat(1, 0)
+
+    def _inc_activations(self, location: str):
+        if location in self.loc_stats:
+            self.loc_stats[location].activations += 1
+        else:
+            self.loc_stats[location] = LocationStat(0, 1)
 
     # def get_hunts():
     #     '''Ok wtf how do we get these? A: Use chrome's debugger.
