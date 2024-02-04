@@ -144,7 +144,7 @@ class PotaMapRoot(tkinter.Tk):
         webbrowser.open(url, new=2, autoraise=True)
 
     def combo_locations_callback(self, event):
-        ''' 
+        '''
         Occurs on the location combobox selection change.
         '''
         loc = self.combo.get()
@@ -194,7 +194,7 @@ class PotaMapRoot(tkinter.Tk):
         self.map_markers.update_markers(loc)
 
     def combo_displayopts_enter(self, event):
-        ''' 
+        '''
         Occurs when user presses enter in the location combobox
         '''
         loc = self.combo_displayopts.get()

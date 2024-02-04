@@ -21,6 +21,8 @@ class LocationData:
 
 class PotaData:
     '''
+    This class holds the location and park data loaded from the POTA
+    API.
     '''
 
     def __init__(self) -> None:

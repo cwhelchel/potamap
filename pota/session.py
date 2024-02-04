@@ -1,8 +1,3 @@
-import requests
-import os
-import json
-
-
 class PotaSession():
     '''This functionality doesn't really exist in the POTA API yet.
         But this class will work with it when it does.
