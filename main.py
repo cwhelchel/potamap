@@ -4,9 +4,10 @@ import os
 import json
 import re
 
-from pota.stats import PotaStats
-from pota.data import PotaData
-from ui.window import PotaMapRoot
+from pota import PotaStats
+from pota import PotaData
+from ui import PotaMapRoot
+from cfg import Config, get_config
 
 VERSION = '0.0.3'
 
