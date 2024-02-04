@@ -40,15 +40,25 @@ generally have the `.json` extension. They can be deleted to force the app to
 re-download them. Some of these files can be big so if the app hangs up, its 
 probably downloading files.
 
+### Updating Your Stats
+
+Whenever you feel the need to update your hunted and activated stats, repeat steps
+1 and 2 above, overwriting the old files with the new ones. This is the only way
+to easily get this data. 
+
+The current POTA API does not allow applications to see into user's stats as 
+that would require user authentication. It may in the future at which point
+this app can be updated to use the new API features.
+
 
 ## Dependencies
 
-Built using python 3.9.13 with VSCode on Windows. It uses TTK, tkintermapview, the POTA API.
+Built using python 3.9.13 with VSCode on Windows. It uses TTK, tkintermapview,
+marshmallow, and the POTA API.
 
-See ``requirements.txt`` for all the deps but just do this
+To install the dependencies run this command (preferably in a Python virtual environment):
 
-    $ pip install tkintermapview
-    $ pip install pyinstaller
+    $ pip install -r requirements.txt
 
 Then you should be able to run script and build the output
 
