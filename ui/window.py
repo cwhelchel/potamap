@@ -10,12 +10,13 @@ from tkintermapview.canvas_position_marker import CanvasPositionMarker
 from pota.data import PotaData
 from pota.stats import PotaStats
 from .marker import MapMarker
+from cfg import Config
 
 
 class PotaMapRoot(tkinter.Tk):
     '''Our main GUI class to display the POTA map'''
 
-    def __init__(self, stats: PotaStats, data: PotaData, config):
+    def __init__(self, stats: PotaStats, data: PotaData, config: Config):
         super().__init__()
 
         self.config = config
@@ -35,16 +36,16 @@ class PotaMapRoot(tkinter.Tk):
         self.create_widgets()
 
         self.combo['values'] = self.data.locations
-        self.map.set_position(self.config['init_x'], self.config['init_y'])
+        self.map.set_position(self.config.init_x, self.config.init_y)
         self.map.set_zoom(7)
-        self.loc_var.set(self.config['location'])
-        self.map_markers.create_markers(self.config['location'])
-        self.show_hunt_var.set(1 if self.config['show_hunt_lbl'] else 0)
-        self.show_actx_var.set(1 if self.config['show_actx_lbl'] else 0)
-        self.show_unkn_var.set(1 if self.config['show_unkn_lbl'] else 0)
-        self.color_var.set(self.config['text_color'])
+        self.loc_var.set(self.config.location)
+        self.map_markers.create_markers(self.config.location)
+        self.show_hunt_var.set(1 if self.config.show_hunt_lbl else 0)
+        self.show_actx_var.set(1 if self.config.show_actx_lbl else 0)
+        self.show_unkn_var.set(1 if self.config.show_unkn_lbl else 0)
+        self.color_var.set(self.config.text_color)
 
-        self._update_loc_labels(self.config['location'])
+        self._update_loc_labels(self.config.location)
 
     def create_widgets(self):
         x = 1200
@@ -80,7 +81,7 @@ class PotaMapRoot(tkinter.Tk):
         self.combo_displayopts_vals = ['Full Park Name', 'Park# Only']
         self.combo_displayopts = ttk.Combobox(
             self.combo_frame2, values=self.combo_displayopts_vals)
-        self.combo_displayopts.current(self.config['display_opts'])
+        self.combo_displayopts.current(self.config.display_opts)
         self.combo_displayopts.pack(side='top', anchor='w')
         self.combo_displayopts.bind(
             "<<ComboboxSelected>>", self.combo_displayopts_callback)
@@ -152,9 +153,9 @@ class PotaMapRoot(tkinter.Tk):
         # (x, y) = loc_coords[loc]
         (x, y) = self.data.get_location_coordinates(loc)
         self.map.set_position(x, y)
-        self.config['location'] = loc
-        self.config['init_x'] = x
-        self.config['init_y'] = y
+        self.config.location = loc
+        self.config.init_x = x
+        self.config.init_y = y
         # self.data.download_parks(loc)
         self.map_markers.create_markers(loc)
         self._update_loc_labels(loc)
@@ -189,8 +190,8 @@ class PotaMapRoot(tkinter.Tk):
         (already selected by user in the location combobox)
         '''
         loc = self.combo_displayopts.get()
-        self.config['display_opts'] = self.combo_displayopts.current()
-        self.map.set_position(self.config['init_x'], self.config['init_y'])
+        self.config.display_opts = self.combo_displayopts.current()
+        self.map.set_position(self.config.init_x, self.config.init_y)
         self.map_markers.update_markers(loc)
 
     def combo_displayopts_enter(self, event):
@@ -208,11 +209,11 @@ class PotaMapRoot(tkinter.Tk):
         h = self.show_hunt_var.get()
         a = self.show_actx_var.get()
         u = self.show_unkn_var.get()
-        self.config['show_hunt_lbl'] = True if h == 1 else False
-        self.config['show_actx_lbl'] = True if a == 1 else False
-        self.config['show_unkn_lbl'] = True if u == 1 else False
+        self.config.show_hunt_lbl = True if h == 1 else False
+        self.config.show_actx_lbl = True if a == 1 else False
+        self.config.show_unkn_lbl = True if u == 1 else False
         # self.map.delete_all_marker()
-        self.map_markers.update_markers(self.config['location'])
+        self.map_markers.update_markers(self.config.location)
 
     def accept_color_input(self, event):
         '''
@@ -221,14 +222,14 @@ class PotaMapRoot(tkinter.Tk):
         val = self.color_var.get()
 
         # nothing changed
-        if val == self.config['text_color']:
+        if val == self.config.text_color:
             return
 
-        self.config['text_color'] = check_color_input(val)
+        self.config.text_color = check_color_input(val)
 
         # if changing colors we have to delete and re-add
         self.map.delete_all_marker()
-        self.map_markers.create_markers(self.config['location'])
+        self.map_markers.create_markers(self.config.location)
 
 
 class MapMarkers:
@@ -246,7 +247,7 @@ class MapMarkers:
     def update_markers(self, location: str):
         for x in self.markers:
             text = x.get_label()
-            x.marker.text_color = self.window.config["text_color"]
+            x.marker.text_color = self.window.config.text_color
             x.marker.set_text(text)
 
     def _create_marker(self, park) -> MapMarker:
@@ -262,7 +263,7 @@ class MapMarkers:
 
         x = MapMarker(park, self.window.stats, self.window.config)
 
-        # are these disable parks.. one example: 9M-0011  tasik raban
+        # are these disabled parks.. one example: 9M-0011
         if park['latitude'] is None or park['longitude'] is None:
             return
 
@@ -272,7 +273,7 @@ class MapMarkers:
             text=x.get_label(),
             font="helvetica 12 bold",
             icon=x.get_icon(),
-            text_color=check_color_input(self.window.config["text_color"]),
+            text_color=check_color_input(self.window.config.text_color),
             data=x,
             command=cmd)
         x.marker = m

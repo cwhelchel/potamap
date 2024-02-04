@@ -4,8 +4,8 @@ class PotaSession():
     '''
 
     def __init__(self, app_key: str, api_key: str):
-        ''' 
-        app_key = key received from POTA team 
+        '''
+        app_key = key received from POTA team
         api_key = user specific api key.
         '''
         self.app_key = app_key
