@@ -26,8 +26,8 @@ if __name__ == "__main__":
 
     config = get_config()
 
-    data = PotaData()
-    data.download_parks(config.location)
+    data = PotaData(data_dir="data")
+    data.check_and_download_parks(config.location)
 
     stats = PotaStats()
 

@@ -1,5 +1,6 @@
 import json
 import os
+from pathlib import Path
 import requests
 from dataclasses import dataclass
 
@@ -25,7 +26,7 @@ class PotaData:
     API.
     '''
 
-    def __init__(self) -> None:
+    def __init__(self, data_dir: str = "") -> None:
         '''
         Initialize the PotaData class
 
@@ -34,6 +35,9 @@ class PotaData:
         '''
         self.locations = []  # list of locations eg: US-AL, US-GA
         self.locations2: dict[str, LocationData] = {}
+        self.data_dir = data_dir
+        if not Path(self.data_dir).exists():
+            Path.mkdir(Path(self.data_dir))
         self.download_locations()
 
     def get_location_info_text(self, loc: str) -> str:
@@ -63,19 +67,24 @@ class PotaData:
         this file.
         '''
 
-        if not os.path.exists("locations.json"):
-            save_json("https://api.pota.app/programs/locations",
-                      "locations.json")
+        file = self._get_path("locations.json")
+        if not os.path.exists(file):
+            save_json("https://api.pota.app/programs/locations", file)
 
         self._load_location_data()
 
-    def download_parks(self, location: str):
+    def check_and_download_parks(self, location: str, force: bool = False):
         '''
-        Downloads the park info for given location.
+        Checks if the data file is present for the given location, if not, it
+        downloads the park data for the location.
 
-        If a park file for the location already exists, it won't re-download it
+        Parameters
+        ------------
+        location : string
+            the POTA location string
+        force : bool
+            true to force downloading, even if file already exists
         '''
-
         loc = location
 
         if loc not in self.locations:
@@ -83,27 +92,38 @@ class PotaData:
 
         url = f"https://api.pota.app/location/parks/{loc}"
         json_file = f"parks-{loc}.json"
+        file = self._get_path(json_file)
 
-        if os.path.exists(json_file):
+        if force:
+            save_json(url, file)
             return
 
-        save_json(url, json_file)
+        if os.path.exists(file):
+            return
 
-    def read_parks(self, location: str) -> []:
+        save_json(url, file)
+
+    def read_parks(self, location: str, force: bool = False) -> []:
         '''
         Read the parks from the file for a given location.
 
         If that file is not found, it will try to download it from the POTA API
+
+        Parameters
+        ------------
+        location : string
+            the POTA location string
+        force : bool
+            true to force downloading, even if file already exists
         '''
         result = []
 
         if location not in self.locations:
             raise ValueError("argument 'location' is invalid")
 
-        file_name = f"parks-{location}.json"
+        self.check_and_download_parks(location, force)
 
-        if not os.path.exists(file_name):
-            self.download_parks(location)
+        file_name = self._get_path(f"parks-{location}.json")
 
         with open(file_name, 'r', encoding='utf-8') as park_file:
             loc_data = json.load(park_file)
@@ -114,7 +134,8 @@ class PotaData:
     def _load_location_data(self):
         self.locations.clear()
 
-        with open("locations.json", 'r') as loc_file:
+        file = self._get_path("locations.json")
+        with open(file, 'r') as loc_file:
             ld = json.load(loc_file)
             for program in ld:
                 for entity in program['entities']:
@@ -130,6 +151,9 @@ class PotaData:
 
         # put them suckas in some sort of order for the dropdown
         self.locations.sort()
+
+    def _get_path(self, file_name: str) -> Path:
+        return Path(self.data_dir, file_name)
 
 
 def save_json(url: str, file_name: str) -> int:
