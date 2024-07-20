@@ -3,7 +3,7 @@ from pota import PotaData
 from ui import PotaMapRoot
 from cfg import Config, get_config, save_config
 
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 
 config: Config
 

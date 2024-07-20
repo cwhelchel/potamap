@@ -1,7 +1,7 @@
 from idlelib.tooltip import Hovertip
 import re
 import tkinter
-from tkinter import ttk
+from tkinter import PhotoImage, ttk
 from tkinter import StringVar, IntVar
 import webbrowser
 import tkintermapview
@@ -129,7 +129,32 @@ class PotaMapRoot(tkinter.Tk):
             self.loc_info_frame,
             text="Open Stats Page",
             command=self.open_browser)
-        self.browse_btn.pack(side='bottom')
+        self.browse_btn.pack(side='top')
+
+        self.hunted_img = PhotoImage(file='gd.png')
+        self.hunted_img_l = ttk.Label(
+            self.loc_info_frame, image=self.hunted_img, text="Hunted Park",
+            compound='left')
+        self.hunted_img_l.pack()
+
+        self.unknown_img = PhotoImage(file='yd.png')
+        self.unknown_img_l = ttk.Label(
+            self.loc_info_frame, image=self.unknown_img, text="Unknown Park",
+            compound='left')
+        self.unknown_img_l.pack()
+
+        self.act_img = PhotoImage(file='bd.png')
+        self.act_img_l = ttk.Label(
+            self.loc_info_frame, image=self.act_img, text="Activated Park",
+            compound='left')
+        self.act_img_l.pack()
+
+        self.both_img = PhotoImage(file='cd.png')
+        self.both_img_l = ttk.Label(
+            self.loc_info_frame, image=self.both_img,
+            text="Activated & Hunted",
+            compound='left')
+        self.both_img_l.pack()
 
         self.right_frame = ttk.Frame(self, padding=10)
         self.right_frame.pack(side='right')
