@@ -1,5 +1,8 @@
 # potamap <a href="https://pota.app"><img src="https://parksontheair.com/wp-content/themes/kff-child-theme/images/pota-logo.png" alt="logo" width="20"/></a>
 
+[![GitHub Release](https://img.shields.io/badge/download-green)](https://github.com/cwhelchel/potamap/releases/download/v0.0.5/potamap_0.0.5.zip)
+[![GitHub Release](https://img.shields.io/github/v/release/cwhelchel/potamap?style=flat-square)](https://github.com/cwhelchel/potamap/releases)
+
 Potamap displays a map of all the parks in a given area and indicators
 of if you have hunted or activated it.
 
@@ -14,7 +17,6 @@ are hunted parks. The blue dots are activated. The cyan dots are activated and
 hunted. The labels can be configured somewhat.
 
 ![Closeup of potamap in action.](docs/img/demo2.png)
-
 
 ## Usage
 
@@ -61,6 +63,10 @@ To install the dependencies run this command (preferably in a Python virtual env
     $ pip install -r requirements.txt
 
 Then you should be able to run script and build the output
+
+To build the executable run
+
+    $ pyinstaller ./main.spec
 
 
 [pota-img]: https://static.pota.app/pota-logo-38x38.png
